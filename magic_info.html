@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Magic Info</title>
+</head>
+<body>
+
+  <div id="dvContent"></div>
+
+  <!-- IN THE LABORATORY THAT WAS DONE, IT WAS NOT NECESSARY TO AUTHENTICATE TO CHANGE THE SOURCES
+  <button id="button_login">
+    LOGIN
+  </button> -->
+
+  <button id="button_HDMI">
+    HDMI
+  </button>
+
+  <button id="button_WALL">
+    MagicInfo
+  </button>
+
+  <script type="text/javascript">
+
+    $("#button_login").click(function() {
+      $("#dvContent").append("<ul></ul>");
+      let id = 'admin' // USER MagicInfo
+      let pw = 'admin2016' // PASSWORD MagicInfo
+      $.ajax({
+        type: "GET",
+        url: "http://192.168.10.74:7001/MagicInfo/openapi/auth?cmd=getAuthToken&id="+id+"&pw="+pw+"",
+        success: function(xml){
+                   $(xml).find('response').each(function(){
+                     let sTitle = $(this).find('responseClass').text();
+                     console.log(sTitle);
+                     $("<li></li>").html(sTitle).appendTo("#dvContent ul");
+                   });
+                 },
+
+        error: function() {
+                   alert('error');
+               }
+      });
+    });
+
+    $("#button_HDMI").click(function() {
+      alert('Porfavor en breve segundos se cambiara la fuente');
+      let tvMAC = 'f8-77-b8-f4-19-73' // MAC MONITOR
+      let tvSource = '33' //  32 : MagicInfo / 96 : MagicInfo-Lite(SPLAYER) / 80 : Plug In Module / 20 : PC / 30 : BNC / 24 : DVI / 12 : av / 4 : S-Video / 8 : component / 31 : DVI_VIDEO / 33 : HDMI1 / 34 : HDMI1_PC / 35 : HDMI2 / 36 : HDMI2_PC / 37 : Display Port / 48 : ATV / 64 : DTV / default:  fail
+      let xml_string = '<?xml version="1.0" encoding="UTF-8"?><request><service><id>PremiumDeviceService.modifyDeviceDisplayInfo</id><parameters><deviceDisplayConf><DeviceDisplayConf><device_id>'+tvMAC+'</device_id><basic_source>'+tvSource+'</basic_source></DeviceDisplayConf></deviceDisplayConf><reqTimeOut>5</reqTimeOut></parameters></service></request>';
+      // Change IP
+      let urlServer = 'http://192.168.0.xxx:7001';
+      $.ajax({
+        type: "GET",
+        url: urlServer+'/MagicInfo/openapi/open',
+        data: { xml: xml_string },
+        success: function(){
+                   alert('The source has been changed successfully');
+                 },
+        error: function() {
+            alert('error');
+        }
+      });
+    });
+
+    $("#button_WALL").click(function() {
+      alert('Porfavor en breve segundos se cambiara la fuente');
+      let tvMAC = 'f8-77-b8-f4-19-73' // MAC MONITOR
+      let tvSource = '96' //  32 : MagicInfo / 96 : MagicInfo-Lite(SPLAYER) / 80 : Plug In Module / 20 : PC / 30 : BNC / 24 : DVI / 12 : av / 4 : S-Video / 8 : component / 31 : DVI_VIDEO / 33 : HDMI1 / 34 : HDMI1_PC / 35 : HDMI2 / 36 : HDMI2_PC / 37 : Display Port / 48 : ATV / 64 : DTV / default:  fail
+      let xml_string = '<?xml version="1.0" encoding="UTF-8"?><request><service><id>PremiumDeviceService.modifyDeviceDisplayInfo</id><parameters><deviceDisplayConf><DeviceDisplayConf><device_id>'+tvMAC+'</device_id><basic_source>'+tvSource+'</basic_source></DeviceDisplayConf></deviceDisplayConf><reqTimeOut>5</reqTimeOut></parameters></service></request>';
+      // Change IP
+          let urlServer = 'http://192.168.0.xxx:7001';
+      $.ajax({
+        type: "GET",
+        url: urlServer+'/MagicInfo/openapi/open',
+        data: { xml: xml_string },
+        success: function(){
+                   alert('The source has been changed successfully');
+                 },
+        error: function() {
+                 alert('error');
+               }
+      });
+    });
+  </script>
+
+</body>
+</html>
